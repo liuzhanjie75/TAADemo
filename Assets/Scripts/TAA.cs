@@ -69,7 +69,12 @@ namespace TAA
             private bool _resetHistoryFrames;
             
             private static readonly int TaaAccumulationTexID = Shader.PropertyToID("_TaaAccumulationTexture");
+            private static readonly int FrameInfluence = Shader.PropertyToID("_FrameInfluence");
+            private static readonly int PrevViewProjMatrixID  = Shader.PropertyToID("_LastViewProjMatrix");
+            private static readonly int ViewProjMatrixWithoutJitterID   = Shader.PropertyToID("_ViewProjMatrixWithoutJitter");
             private static readonly int SourceSize = Shader.PropertyToID("_SourceSize");
+            
+            private Matrix4x4 _prevViewProjMatrix, _viewProjMatrix;
             
             internal bool Setup(float jitterScale, ref Material material) {
                 _taaMaterial = material;
@@ -107,14 +112,15 @@ namespace TAA
                 using (new ProfilingScope(commandBuffer, _profilingSampler))
                 {
                     commandBuffer.SetGlobalTexture(TaaAccumulationTexID, _accumulationTexture);
-                    commandBuffer.SetGlobalFloat("_FrameInfluence", _resetHistoryFrames ? 1f : 0.1f);
+                    commandBuffer.SetGlobalFloat(FrameInfluence, _resetHistoryFrames ? 1f : 0.1f);
+                    commandBuffer.SetGlobalMatrix(PrevViewProjMatrixID, _prevViewProjMatrix);
+                    commandBuffer.SetGlobalMatrix(ViewProjMatrixWithoutJitterID, _viewProjMatrix);
                     
-                    Blitter.BlitCameraTexture(commandBuffer, _sourceTexture, _taaTemporaryTexture, _taaMaterial, 0);
-                    
-                    Blitter.BlitCameraTexture(commandBuffer, _taaTemporaryTexture, _accumulationTexture);
-                    
-                    Blitter.BlitCameraTexture(commandBuffer, _taaTemporaryTexture, _destinationTexture);
+                    Blitter.BlitCameraTexture(commandBuffer, _sourceTexture, _taaTemporaryTexture, _taaMaterial, 0); // TAA
+                    Blitter.BlitCameraTexture(commandBuffer, _taaTemporaryTexture, _accumulationTexture); // Copy History
+                    Blitter.BlitCameraTexture(commandBuffer, _taaTemporaryTexture, _destinationTexture);  // Final Pass
 
+                    _prevViewProjMatrix = _viewProjMatrix;
                     _resetHistoryFrames = false;
                 }
                 
@@ -133,6 +139,11 @@ namespace TAA
                 _taaMaterial.SetVector(SourceSize, new Vector4(_taaDescriptor.width,_taaDescriptor.height, 1.0f / _taaDescriptor.width, 1.0f / _taaDescriptor.height ));
                 _resetHistoryFrames = RenderingUtils.ReAllocateIfNeeded(ref _accumulationTexture, _taaDescriptor,
                     FilterMode.Bilinear, TextureWrapMode.Clamp, name: AccumulationTextureName);
+                if (_resetHistoryFrames)
+                {
+                    _prevViewProjMatrix = renderingData.cameraData.GetProjectionMatrix() *
+                                          renderingData.cameraData.GetViewMatrix();
+                }
                 
                 RenderingUtils.ReAllocateIfNeeded(ref _taaTemporaryTexture, _taaDescriptor, FilterMode.Bilinear,
                     TextureWrapMode.Clamp, name: TaaTemporaryTextureName);
@@ -140,7 +151,9 @@ namespace TAA
                 var renderer = renderingData.cameraData.renderer;
                 ConfigureTarget(renderer.cameraColorTargetHandle);
                 ConfigureClear(ClearFlag.None, Color.white);
-                
+
+                _viewProjMatrix = renderingData.cameraData.GetProjectionMatrix() *
+                                  renderingData.cameraData.GetViewMatrix();
             }
 
             public override void OnCameraCleanup(CommandBuffer cmd)

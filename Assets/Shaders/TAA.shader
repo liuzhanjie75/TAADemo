@@ -81,7 +81,7 @@ Shader "Unlit/TAA"
                 float clipBlend = max(enterIntersect.x, max(enterIntersect.y, enterIntersect.z));
                 clipBlend = saturate(clipBlend);
 
-                return YCoCgToRGB(lerp(accm, filtered, clipBlend));
+                return lerp(accm, filtered, clipBlend);
             }
 
             float2 ComputeVelocity(float2 uv)
@@ -150,7 +150,7 @@ Shader "Unlit/TAA"
                 AdjustColorBox(input.texcoord, boxMin, boxMax);
 
                 //accum.rgb = YCoCgToRGB(clamp(historyYCoCg, boxMin, boxMax));
-                accum.rgb = ClipToAABBCenter(historyYCoCg, boxMin, boxMax);
+                accum.rgb = YCoCgToRGB(ClipToAABBCenter(historyYCoCg, boxMin, boxMax));
                 float frameInfluence = saturate(_FrameInfluence + length(velocity) * 100);
 
                 return accum * (1.0 - frameInfluence) + source * frameInfluence;

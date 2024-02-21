@@ -6,7 +6,7 @@ namespace TAA
 {
     internal static class Jitter
     {
-        internal static float GetHalton(int index, int radix)
+        private static float GetHalton(int index, int radix)
         {
             var result = 0f;
             var fraction = 1f / radix;
@@ -20,7 +20,7 @@ namespace TAA
             return result;
         }
 
-        internal static Vector2 CalculateJitter(int frameIndex)
+        private static Vector2 CalculateJitter(int frameIndex)
         {
             var jitterX = GetHalton((frameIndex & 1023) + 1, 2) - 0.5f;
             var jitterY = GetHalton((frameIndex & 1023) + 1, 3) - 0.5f;
@@ -37,8 +37,8 @@ namespace TAA
 
             var jitter = CalculateJitter(frameIndex) * jitterScale;
 
-            projectionMatrix.m02 += jitter.x;
-            projectionMatrix.m12 += jitter.y;
+            projectionMatrix.m02 += jitter.x * (2f / width);
+            projectionMatrix.m12 += jitter.y * (2f / height);
 
             return projectionMatrix;
         }

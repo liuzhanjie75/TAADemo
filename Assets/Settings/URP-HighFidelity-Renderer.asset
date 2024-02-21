@@ -110,3 +110,5 @@ MonoBehaviour:
   m_Name: TAA
   m_EditorClassIdentifier: 
   m_Active: 1
+  JitterScale: 1
+  TaaMaterial: {fileID: 2100000, guid: 4447f06388b657542bba87c23fff13d5, type: 2}

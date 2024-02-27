@@ -54,7 +54,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
   - {fileID: 3940650178804035274}
-  m_RendererFeatureMap: adc0de57c6d2eee5caaeb18b7500b036
+  - {fileID: 4503636582882379046}
+  m_RendererFeatureMap: adc0de57c6d2eee5caaeb18b7500b036268528609c21803e
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -109,6 +110,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696cc8b983ddeb744ab9807493f6d941, type: 3}
   m_Name: TAA
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   JitterScale: 1
   TaaMaterial: {fileID: 2100000, guid: 4447f06388b657542bba87c23fff13d5, type: 2}
+--- !u!114 &4503636582882379046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b8bd43bea4d07d429fe995934a8774c, type: 3}
+  m_Name: FXAA
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  FxaaMaterial: {fileID: 2100000, guid: 603bba18a5ea4b647b0165ca7dd7c295, type: 2}
+  Mode: 0

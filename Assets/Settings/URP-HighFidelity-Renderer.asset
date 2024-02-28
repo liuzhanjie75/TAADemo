@@ -70,7 +70,8 @@ MonoBehaviour:
   - {fileID: -1878332245247344467}
   - {fileID: 3940650178804035274}
   - {fileID: 4503636582882379046}
-  m_RendererFeatureMap: adc0de57c6d2eee5caaeb18b7500b036268528609c21803e
+  - {fileID: 2908367101368665952}
+  m_RendererFeatureMap: adc0de57c6d2eee5caaeb18b7500b036268528609c21803e6007833178985c28
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -113,6 +114,20 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &2908367101368665952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d8f869b051842b4e95ecba6ccb8261b, type: 3}
+  m_Name: SMAA
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  SMAAMaterial: {fileID: 2100000, guid: 117b8d81f3d8b7448ac769f8ba40b12a, type: 2}
 --- !u!114 &3940650178804035274
 MonoBehaviour:
   m_ObjectHideFlags: 0

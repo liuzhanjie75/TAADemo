@@ -10,7 +10,7 @@ public class FXAA : ScriptableRendererFeature
         Console = 1,
     };
     
-    [SerializeField] public Material FxaaMaterial;
+    [SerializeField] public Shader FxaaShader;
     [SerializeField] public FXAAMode Mode;
     [Range(0.0312f, 0.0833f)]
     public float contrastThreshold = 0.0312f;
@@ -29,7 +29,10 @@ public class FXAA : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if (_fxaaPass.Setup(FxaaMaterial, Mode, contrastThreshold, relativeThreshold))
+        if (!renderingData.cameraData.postProcessEnabled || FxaaShader == null) 
+            return;
+        
+        if (_fxaaPass.Setup(FxaaShader, Mode, contrastThreshold, relativeThreshold))
             renderer.EnqueuePass(_fxaaPass);
     }
     
@@ -53,9 +56,9 @@ public class FXAA : ScriptableRendererFeature
         private static readonly int SourceSize = Shader.PropertyToID("_SourceSize");
         private static readonly int ContrastThreshold = Shader.PropertyToID("_ContrastThreshold");
         private static readonly int RelativeThreshold = Shader.PropertyToID("_RelativeThreshold");
-        public bool Setup(Material fxaa, FXAAMode mode, float contrastThreshold, float relativeThreshold)
+        public bool Setup(Shader fxaa, FXAAMode mode, float contrastThreshold, float relativeThreshold)
         {
-            _fxaaMaterial = fxaa;
+            _fxaaMaterial = new Material(fxaa);
             _mode = mode;
             _contrastThreshold = contrastThreshold;
             _relativeThreshold = relativeThreshold;

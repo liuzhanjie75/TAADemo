@@ -8,7 +8,7 @@ namespace TAA
     public class TAA : ScriptableRendererFeature
     {
         [SerializeField] public float JitterScale = 1f;
-        [SerializeField] public Material TaaMaterial;
+        [SerializeField] public Shader TaaShader;
         
         private JitterPass _jitterPass;
         private TAAPass _taaPass;
@@ -29,10 +29,10 @@ namespace TAA
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
-            if (!renderingData.cameraData.postProcessEnabled || TaaMaterial == null) 
+            if (!renderingData.cameraData.postProcessEnabled || TaaShader == null) 
                 return;
             
-            var shouldAdd = _jitterPass.Setup(JitterScale) && _taaPass.Setup(JitterScale, ref TaaMaterial);
+            var shouldAdd = _jitterPass.Setup(JitterScale) && _taaPass.Setup(JitterScale, TaaShader);
             if (!shouldAdd) 
                 return;
             
@@ -76,8 +76,9 @@ namespace TAA
             
             private Matrix4x4 _prevViewProjMatrix, _viewProjMatrix;
             
-            internal bool Setup(float jitterScale, ref Material material) {
-                _taaMaterial = material;
+            internal bool Setup(float jitterScale, Shader taa)
+            {
+                _taaMaterial = new Material(taa);
                 _jitterScale = jitterScale;
 
                 ConfigureInput(ScriptableRenderPassInput.Normal);

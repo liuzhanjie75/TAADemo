@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
   m_Name: SSAO
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   m_Settings:
     AOMethod: 1
     Downsample: 0
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: SMAA
   m_EditorClassIdentifier: 
   m_Active: 0
-  SMAAMaterial: {fileID: 2100000, guid: 117b8d81f3d8b7448ac769f8ba40b12a, type: 2}
+  SmaaShader: {fileID: 4800000, guid: 3d05e99ca3cdf0b4ab3f0e1f7d5f5844, type: 3}
 --- !u!114 &3940650178804035274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 0
   JitterScale: 1
-  TaaMaterial: {fileID: 2100000, guid: 4447f06388b657542bba87c23fff13d5, type: 2}
+  TaaShader: {fileID: 4800000, guid: 6705ff1d4c641bb459dac1492b625a5b, type: 3}
 --- !u!114 &4503636582882379046
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: FXAA
   m_EditorClassIdentifier: 
   m_Active: 0
-  FxaaMaterial: {fileID: 2100000, guid: 603bba18a5ea4b647b0165ca7dd7c295, type: 2}
-  Mode: 0
+  FxaaShader: {fileID: 4800000, guid: 40c09f5d6c7cd6e40b8955e49fa7ac3d, type: 3}
+  Mode: 1
   contrastThreshold: 0.0312
   relativeThreshold: 0.063

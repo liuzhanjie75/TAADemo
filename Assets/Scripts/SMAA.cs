@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 public class SMAA : ScriptableRendererFeature
 {
     
-    [SerializeField] public Material SMAAMaterial;
+    [SerializeField] public Shader SmaaShader;
 
     private SMAAPass _SMAAPass;
 
@@ -19,7 +19,10 @@ public class SMAA : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if (_SMAAPass.Setup(SMAAMaterial))
+        if (!renderingData.cameraData.postProcessEnabled || SmaaShader == null) 
+            return;
+        
+        if (_SMAAPass.Setup(SmaaShader))
             renderer.EnqueuePass(_SMAAPass);
     }
     
@@ -43,9 +46,9 @@ public class SMAA : ScriptableRendererFeature
         private const string BlendTexture = "_blendTexture";
         private static readonly int SourceSize = Shader.PropertyToID("_SourceSize");
         private static readonly int BlendTex = Shader.PropertyToID("_BlendTex");
-        public bool Setup(Material fxaa)
+        public bool Setup(Shader smaa)
         {
-            _SMAAMaterial = fxaa;
+            _SMAAMaterial = new Material(smaa);
             ConfigureInput(ScriptableRenderPassInput.Normal);
             return _SMAAMaterial != null;
         }

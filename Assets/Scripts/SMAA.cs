@@ -32,11 +32,13 @@ public class SMAA : ScriptableRendererFeature
     private class SMAAPass : ScriptableRenderPass
     {
         private Material _SMAAMaterial;
+        private RTHandle _sourceTexture;
         private RTHandle _edgeTexture;
         private RTHandle _blendTexture;
         private RenderTextureDescriptor _SMAADescriptor;
         
         private readonly ProfilingSampler _profilingSampler = new("SMAA");
+        private const string SourceTexture = "_sourceTexture";
         private const string EdgeTexture = "_edgeTexture";
         private const string BlendTexture = "_blendTexture";
         private static readonly int SourceSize = Shader.PropertyToID("_SourceSize");
@@ -75,10 +77,11 @@ public class SMAA : ScriptableRendererFeature
                     new Vector4(_SMAADescriptor.width, _SMAADescriptor.height, 1.0f / _SMAADescriptor.width,
                         1.0f / _SMAADescriptor.height));
                 
+                Blitter.BlitCameraTexture(commandBuffer, sourceTexture, _sourceTexture);
                 Blitter.BlitCameraTexture(commandBuffer, sourceTexture, _edgeTexture, _SMAAMaterial, 0);
                 Blitter.BlitCameraTexture(commandBuffer, _edgeTexture, _blendTexture, _SMAAMaterial, 1);
                 _SMAAMaterial.SetTexture(BlendTex, _blendTexture);
-                Blitter.BlitCameraTexture(commandBuffer, sourceTexture, destinationTexture, _SMAAMaterial, 2);
+                Blitter.BlitCameraTexture(commandBuffer, _sourceTexture, destinationTexture, _SMAAMaterial, 2);
 
             }
             
@@ -92,6 +95,8 @@ public class SMAA : ScriptableRendererFeature
             _SMAADescriptor = renderingData.cameraData.cameraTargetDescriptor;
             _SMAADescriptor.msaaSamples = 1;
             _SMAADescriptor.depthBufferBits = 0;
+
+            RenderingUtils.ReAllocateIfNeeded(ref _sourceTexture, _SMAADescriptor, FilterMode.Bilinear, TextureWrapMode.Clamp, name: SourceTexture);
             
             _SMAADescriptor.colorFormat = RenderTextureFormat.RG16;
             RenderingUtils.ReAllocateIfNeeded(ref _edgeTexture, _SMAADescriptor, FilterMode.Bilinear, TextureWrapMode.Clamp, name: EdgeTexture);

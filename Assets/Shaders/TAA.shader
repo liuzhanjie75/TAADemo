@@ -53,9 +53,7 @@ Shader "AA/TAA"
 
             void AdjustColorBox(float2 uv, inout half3 boxMin, inout half3 boxMax)
             {
-                boxMax = 1.0;
-                boxMin = 0.0;
-
+                boxMin = boxMax = RGBToYCoCg(GetSource(uv));
                 UNITY_UNROLL
                 for (int k = 0; k < kOffsetSize; ++k)
                 {
